@@ -1,0 +1,56 @@
+# ─── ARENACORE — Render Deploy Config ────────────────────────────────────────
+# Este archivo le dice a Render cómo desplegar todo el proyecto automáticamente.
+# Documentación: https://render.com/docs/blueprint-spec
+
+services:
+  # ── Backend Node.js ──────────────────────────────────────────────────────────
+  - type: web
+    name: arenacore-api
+    runtime: node
+    plan: free                          # tier gratuito de Render
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health            # Render verifica que el servidor responde
+    autoDeploy: true                    # re-despliega automáticamente en cada push a main
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: JWT_SECRET
+        generateValue: true             # Render genera un valor aleatorio seguro automáticamente
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: DATABASE_URL
+        fromDatabase:                   # Render conecta automáticamente la BD de abajo
+          name: arenacore-db
+          property: connectionString
+      - key: CLIENT_URL
+        value: https://arenacore.onrender.com   # ← cambia por la URL de tu frontend en Render
+
+  # ── Frontend React (Static Site) ─────────────────────────────────────────────
+  - type: web
+    name: arenacore-frontend
+    runtime: static
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
+    pullRequestPreviewsEnabled: true
+    autoDeploy: true
+
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://arenacore-api.onrender.com/api   # ← URL del backend de arriba
+
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html        # necesario para React Router (SPA)
+
+# ── Base de datos PostgreSQL ──────────────────────────────────────────────────
+databases:
+  - name: arenacore-db
+    plan: free                          # PostgreSQL gratuito en Render (90 días)
+    databaseName: arenacore
+    user: arenacore_user

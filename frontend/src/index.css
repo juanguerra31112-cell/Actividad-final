@@ -1,0 +1,51 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #07080d;
+  --bg1:       #0d0f18;
+  --bg2:       #13162100;
+  --bg3:       #1a1d2e;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.13);
+  --accent:    #00e5ff;
+  --accent2:   #7c3aed;
+  --accent3:   #f59e0b;
+  --red:       #ef4444;
+  --green:     #22c55e;
+  --text:      #e8eaf0;
+  --text2:     #8b90a8;
+  --text3:     #545870;
+  --font-head: 'Rajdhani', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+  --font-cond: 'Barlow Condensed', sans-serif;
+  --radius:    8px;
+  --radius-lg: 14px;
+}
+
+html, body, #root { height: 100%; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg1); }
+::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 2px; }
+
+/* Utility */
+.sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0; }
+
+/* Animations */
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+@keyframes slide-in  { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes shimmer   { from{background-position:200% 0} to{background-position:-200% 0} }
+@keyframes glow-pulse{ 0%,100%{box-shadow:0 0 6px rgba(0,229,255,.3)} 50%{box-shadow:0 0 18px rgba(0,229,255,.6)} }
+@keyframes spin      { to{transform:rotate(360deg)} }
+
+.animate-in { animation: slide-in .25s ease both; }
